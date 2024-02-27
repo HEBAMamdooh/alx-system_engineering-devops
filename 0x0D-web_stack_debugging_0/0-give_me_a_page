@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Start Apache service
+service apache2 start
+
+# Create an HTML page with "Hello Holberton"
+echo "Hello Holberton" > /var/www/html/index.html
