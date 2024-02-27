@@ -1,39 +1,17 @@
 #!/usr/bin/env bash
+# This script configures Nginx to redirect /redirect_me to another page
+
 # Check if Nginx is installed
-
-if ! command -v nginx &> /dev/null
-then
-    # Install Nginx if not already installed
-    apt-get update -y
-    apt-get install -y nginx
+if ! command -v nginx &> /dev/null; then
+    echo "Nginx is not installed. Please run 1-install_nginx_web_server first."
+    exit 1
 fi
 
-# Configure Nginx for redirection
-echo "
-server {
-    listen 80;
-    server_name _;
+# Define the redirection destination URL
+REDIRECT_URL="https://www.youtube.com/watch?v=QH2-TGUlwu4"
 
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-    }
+# Create a backup of the default Nginx configuration
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-    # Add other server configurations if needed
-}
-" > /etc/nginx/sites-available/redirect_me
-
-# Create a symbolic link to enable the site
-ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
-
-# Remove the default Nginx configuration
-rm /etc/nginx/sites-enabled/default
-
-# Restart Nginx
-/etc/init.d/nginx restart
-
-# Check if Nginx is running
-if pgrep -x "nginx" > /dev/null; then
-    echo "Nginx configured for redirection."
-else
-    echo "Error configuring Nginx. Please check logs for more information."
-fi
+# Use sed to configure redirection in the Nginx configuration
+sed -i '/server_name _;/a \\n\tlocation /redir
