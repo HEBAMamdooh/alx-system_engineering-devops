@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check if Nginx is installed
 if ! command -v nginx &> /dev/null
