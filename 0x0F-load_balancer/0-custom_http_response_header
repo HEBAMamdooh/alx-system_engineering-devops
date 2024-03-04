@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
 # Install Nginx
-sudo apt-get update
-sudo apt-get install -y nginx
+apt-get -y update
+apt-get -y install nginx
+ufw allow 'Nginx HTTP'
 
 # Create a custom configuration file for Nginx
-echo "add_header X-Served-By \$hostname;" | sudo tee /etc/nginx/conf.d/extra_headers.conf
+echo 'Hello world!' > /var/www/html/index.nginx-debian.html
+sed -i '/listen 80 default_server;/a rewrite ^/redirect_me https://www.google.com;' /etc/nginx/sites-available/default
+sed -i '/listen 80 default_server;/a add_header X-Served-By $hostname;' /etc/nginx/sites-available/default
+
 
 # Restart Nginx to apply changes
-sudo service nginx restart
+service nginx start
