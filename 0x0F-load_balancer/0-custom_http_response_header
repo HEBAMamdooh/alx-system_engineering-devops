@@ -1,21 +1,29 @@
 #!/usr/bin/env bash
 
+# configures an Ubuntu machine with nginx
+FILE="/etc/nginx/sites-available/default"
+ERRORFILE="/usr/share/nginx/html/404error.html"
+REDIRECT="..."
+ERRORREDIRECT="\n\terror_page 404 /404error.html;\n\tlocation = /404error.html {\n\t\troot /usr/share/nginx/html;\n\t\tinternal;\n\t}\n"
+CUSTOMHEADER='\n\tadd_header X-Served-By $hostname;\n'
+STRING="Hello World!"
+FOUR="Ceci n'est pas une page"
+
 # Update and upgrade the system
-sudo apt-get update
-sudo apt-get -y upgrade
+apt-get -y update
+apt-get -y upgrade
 
 # Install Nginx
-sudo apt-get -y install nginx
+apt-get -y install nginx
 
-# Clone configuration from web-01 to web-02
-sudo cp -r /etc/nginx /etc/nginx_backup   # Backup existing Nginx configuration
-sudo rsync -av /etc/nginx_backup/ /etc/nginx/   # Copy configuration from web-01 to web-02
+ufw allow 'Nginx HTTP'
 
-# Add custom header configuration to Nginx
-echo 'add_header X-Served-By $hostname;' | sudo tee -a /etc/nginx/nginx.conf
+echo "$STRING" > /var/www/html/index.nginx-debian.html
+echo "$FOUR" > "$ERRORFILE"
+
+sed -i "37i\ $REDIRECT" "$FILE"
+sed -i "37i\ $ERRORREDIRECT" "$FILE"
+sed -i "37i\ $CUSTOMHEADER" "$FILE"
 
 # Restart Nginx to apply changes
-sudo service nginx restart
-
-# Ignore SC2154 for shellcheck
-# shellcheck disable=SC2154
+service nginx restart
