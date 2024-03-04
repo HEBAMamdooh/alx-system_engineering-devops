@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Update and upgrade the system
+sudo apt-get update
+sudo apt-get -y upgrade
+
+# Install Nginx
+sudo apt-get -y install nginx
+
+# Clone configuration from web-01 to web-02
+sudo cp -r /etc/nginx /etc/nginx_backup   # Backup existing Nginx configuration
+sudo rsync -av /etc/nginx_backup/ /etc/nginx/   # Copy configuration from web-01 to web-02
+
+# Add custom header configuration to Nginx
+echo 'add_header X-Served-By $hostname;' | sudo tee -a /etc/nginx/nginx.conf
+
+# Restart Nginx to apply changes
+sudo service nginx restart
+
+# Ignore SC2154 for shellcheck
+# shellcheck disable=SC2154
