@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# 1. Install your load balancer
 
 # Update and upgrade the system
 sudo apt-get update
