@@ -1,29 +1,11 @@
 #!/usr/bin/env bash
 
-# configures an Ubuntu machine with nginx
-FILE="/etc/nginx/sites-available/default"
-ERRORFILE="/usr/share/nginx/html/404error.html"
-REDIRECT="..."
-ERRORREDIRECT="\n\terror_page 404 /404error.html;\n\tlocation = /404error.html {\n\t\troot /usr/share/nginx/html;\n\t\tinternal;\n\t}\n"
-CUSTOMHEADER='\n\tadd_header X-Served-By $hostname;\n'
-STRING="Hello World!"
-FOUR="Ceci n'est pas une page"
-
-# Update and upgrade the system
-apt-get -y update
-apt-get -y upgrade
-
 # Install Nginx
-apt-get -y install nginx
+sudo apt-get update
+sudo apt-get install -y nginx
 
-ufw allow 'Nginx HTTP'
-
-echo "$STRING" > /var/www/html/index.nginx-debian.html
-echo "$FOUR" > "$ERRORFILE"
-
-sed -i "37i\ $REDIRECT" "$FILE"
-sed -i "37i\ $ERRORREDIRECT" "$FILE"
-sed -i "37i\ $CUSTOMHEADER" "$FILE"
+# Create a custom configuration file for Nginx
+echo "add_header X-Served-By \$hostname;" | sudo tee /etc/nginx/conf.d/extra_headers.conf
 
 # Restart Nginx to apply changes
-service nginx restart
+sudo service nginx restart
