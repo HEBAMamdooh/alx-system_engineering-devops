@@ -35,7 +35,7 @@ backend lb-backend
     mode http
     balance roundrobin
     server 444376-web-01 52.91.136.183:80 check
-    server 444376-web-02 52.91.136.183:80 check
+    server 444376-web-02 54.164.128.105:80 check
 " | sudo tee -a /etc/haproxy/haproxy.cfg
 
 # Restart HAProxy to apply changes
