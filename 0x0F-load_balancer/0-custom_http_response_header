@@ -2,18 +2,18 @@
 # 0. Double the number of webservers
 
 # Install Nginx
-apt-get -y update
-apt-get -y install nginx
+sudo apt-get -y update
+sudo apt-get -y install nginx
 sudo ufw allow 'Nginx HTTP'
 
 # Create a custom configuration file for Nginx
-echo "add_header X-Served-By \$hostname;" | sudo tee -a /etc/nginx/sites-available/default
-echo 'Hello world!' > /var/www/html/index.nginx-debian.html
-sed -i '/listen 80 default_server;/a rewrite ^/redirect_me https://www.google.com;' /etc/nginx/sites-available/default
-sed -i '/listen 80 default_server;/a add_header X-Served-By $hostname;' /etc/nginx/sites-available/default
+sudo echo "add_header X-Served-By \$hostname;" | sudo tee -a /etc/nginx/sites-available/default
+sudo echo 'Hello world!' > /var/www/html/index.nginx-debian.html
+sudo sed -i '/listen 80 default_server;/a add_header X-Served-By $hostname;' /etc/nginx/sites-available/default
+sudo sed -i '/listen 80 default_server;/a rewrite ^/redirect_me https://www.google.com;' /etc/nginx/sites-available/default
 
 
 # shellcheck disable=SC2154
 
 # Restart Nginx to apply changes
-service nginx start
+sudo service nginx start
