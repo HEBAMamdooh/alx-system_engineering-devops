@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
-# 0. Double the number of webservers
+# 0-custom_http_response_header
 
-# Install Nginx
+# Update package list and install Nginx
 sudo apt-get -y update
 sudo apt-get -y install nginx
+
+# Allow HTTP traffic through the firewall
 sudo ufw allow 'Nginx HTTP'
+
 
 # Create a custom configuration file for Nginx
 sudo echo "add_header X-Served-By \$hostname;" | sudo tee -a /etc/nginx/sites-available/default
-sudo echo 'Hello world!' > /var/www/html/index.nginx-debian.html
 sudo sed -i '/listen 80 default_server;/a add_header X-Served-By $hostname;' /etc/nginx/sites-available/default
-sudo sed -i '/listen 80 default_server;/a rewrite ^/redirect_me https://www.google.com;' /etc/nginx/sites-available/default
 
+# Set a simple HTML response
+echo 'Hello world!' | sudo tee /var/www/html/index.nginx-debian.html
 
 # shellcheck disable=SC2154
 
