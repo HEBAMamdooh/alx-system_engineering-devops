@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 0-custom_http_response_header
+# Script to configure a web server with Nginx and a custom HTTP header
 
 # Update package list and install Nginx
 sudo apt-get -y update
@@ -8,15 +8,16 @@ sudo apt-get -y install nginx
 # Allow HTTP traffic through the firewall
 sudo ufw allow 'Nginx HTTP'
 
+# Configure Nginx to include a custom header with the hostname
+sudo tee /etc/nginx/conf.d/custom_header.conf <<EOF
+add_header X-Served-By \$hostname;
+EOF
 
-# Create a custom configuration file for Nginx
-sudo echo "add_header X-Served-By \$hostname;" | sudo tee -a /etc/nginx/sites-available/default
-sudo sed -i '/listen 80 default_server;/a add_header X-Served-By $hostname;' /etc/nginx/sites-available/default
+# Modify the default configuration to include the custom header
+sudo sed -i '/server {/a include /etc/nginx/conf.d/custom_header.conf;' /etc/nginx/sites-available/default
 
 # Set a simple HTML response
 echo 'Hello world!' | sudo tee /var/www/html/index.nginx-debian.html
 
-# shellcheck disable=SC2154
-
-# Restart Nginx to apply changes
-sudo service nginx start
+# Reload Nginx to apply the changes
+sudo systemctl reload nginx
