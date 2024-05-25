@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 1. Install your load balancer
+# 1. Install load balancer
 
 # Update and upgrade the system
 sudo apt-get update
@@ -35,8 +35,8 @@ defaults
 backend lb-backend
     mode http
     balance roundrobin
-    server 444376-web-01 52.91.136.183:80 check
-    server 444376-web-02 54.164.128.105:80 check
+    server 444376-web-01 54.87.214.4:80 check
+    server 444376-web-02 52.3.255.28:80 check
 " | sudo tee -a /etc/haproxy/haproxy.cfg
 
 # Restart HAProxy to apply changes
