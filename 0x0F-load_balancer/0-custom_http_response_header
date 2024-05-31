@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Script to configure a web server with Nginx and a custom HTTP header
 
+# Ignore SC2154 for shellcheck
+# shellcheck disable=SC2154
+
 # Update package list and install Nginx
 sudo apt-get -y update
 sudo apt-get -y install nginx
